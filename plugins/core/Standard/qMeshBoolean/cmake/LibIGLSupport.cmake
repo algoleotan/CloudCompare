@@ -27,19 +27,16 @@ find_package( CGAL REQUIRED COMPONENTS Core )
 
 # Link project with libigl library
 function( target_link_libIGL ) # 1 argument: ARGV0 = project name
+	# libigl is a header-only library, so we only need to link CGAL
+	target_link_libraries( ${ARGV0} CGAL::CGAL CGAL::CGAL_Core)
+
+	# Optional: if library files are provided (for non-header-only build)
 	if( LIBIGL_RELEASE_LIBRARY_FILE )
-		#Release mode only by default
 		target_link_libraries( ${ARGV0} optimized ${LIBIGL_RELEASE_LIBRARY_FILE} )
-		target_link_libraries( ${ARGV0} optimized CGAL::CGAL CGAL::CGAL_Core)
 
 		#optional: debug mode
 		if ( LIBIGL_DEBUG_LIBRARY_FILE )
 			target_link_libraries( ${ARGV0} debug ${LIBIGL_DEBUG_LIBRARY_FILE} )
-			target_link_libraries( ${ARGV0} debug CGAL::CGAL CGAL::CGAL_Core)
 		endif()
-	else()
-		message( SEND_ERROR "No libigl release library files specified (LIBIGL_RELEASE_LIBRARY_FILE)" )
 	endif()
-	
-	
 endfunction()
